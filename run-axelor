@@ -1,0 +1,3 @@
+sudo docker start timescaledb
+./gradlew clean
+./gradlew run --port 8085
