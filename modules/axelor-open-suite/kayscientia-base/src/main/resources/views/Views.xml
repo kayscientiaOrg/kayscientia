@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+
+
+<!--////////////////////// City Grid  //////////////////-->
+  <grid name="kay-city-grid" title="Cities" model="com.axelor.apps.base.db.City" editable="true" orderBy="region" onNew="action-set-country-on-new" edit-icon="true">
+    <toolbar>
+      <button name="checkDuplicateBtn" title="Check Duplicate" onClick="action-base-method-show-duplicate"/>
+      <button name="importCityBtn" title="Import city" onClick="action-base-view-import-city-popup"/>
+    </toolbar>
+    <hilite background="success" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Punjab'"/>
+    <hilite background="lime" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Khyber Pakhtunkhwa'"/>
+    <hilite background="warning" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Sindh'"/>
+    <hilite background="info" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Balochistan'"/>
+    <hilite background="teal" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Azad Jammu Kashmir'"/>
+    <hilite background="deeppurple" strong="true" if="country.name == 'Pakistan' &amp;&amp; region.name == 'Islamabad'"/>
+    <field name="name"/>
+    <field name="country" canNew="true" x-initial-country="GB"/>
+    <field name="region" canNew="true"/>
+    <field name="lat" hidden="true"/>
+    <field name="lon" hidden="true"/>
+    <field name="zip" hidden="true"/>
+  </grid>
+
+  <!--////////////////////// City Form  //////////////////-->
+  <form name="kay-city-form" title="City" model="com.axelor.apps.base.db.City" width="large">
+    <panel name="mainPanel">
+      <field name="name" colSpan="4"/>
+      <field name="zip" title="Postal Code" colSpan="2"/>
+      <field name="lat" colSpan="3"/>
+      <field name="lon" colSpan="3"/>
+    </panel>
+    <panel name="localizationPanel" title="Localization">
+      <field name="country" form-view="country-form" grid-view="country-grid"/>
+      <field name="region" onSelect="action-country-select-region-city"/>
+    </panel>
+  </form>
+
+
+  <!--////////////////////// Province Grid  //////////////////-->
+  <grid name="kay-region-grid" title="Provinces" model="com.axelor.apps.base.db.Region" >
+    <field name="name"/>
+    <field name="lat"/>
+    <field name="lon"/>
+    <field name="country" form-view="country-form" grid-view="country-grid"/>
+  </grid>
+
+  <!--////////////////////// Province Form  //////////////////-->
+  <form name="kay-region-form" title="Provinces" model="com.axelor.apps.base.db.Region">
+    <panel name="mainPanel">
+      <field name="name"/>
+      <field name="code" colSpan="2" x-bind="{{code|unaccent|uppercase}}"/>
+      <field name="lat"/>
+      <field name="lon"/>
+      <field name="country" form-view="country-form" grid-view="country-grid"/>
+    </panel>
+  </form>
+
+
+  <!--////////////////////// Country Grid  //////////////////-->
+  <grid name="kay-country-grid" title="Countries" model="com.axelor.apps.base.db.Country" edit-icon="true">
+    <field name="name"/>
+    <field name="alpha2Code"/>
+    <field name="numericCode"/>
+  </grid>
+
+  <!--////////////////////// Country Form  //////////////////-->
+  <form name="kay-country-form" title="Country" model="com.axelor.apps.base.db.Country">
+    <panel name="mainPanel">
+      <field name="name" x-bind="{{name|uppercase}}"/>
+      <field name="alpha3Code" x-bind="{{alpha3Code|uppercase}}"/>
+      <field name="alpha2Code" x-bind="{{alpha2Code|uppercase}}"/>
+      <field name="numericCode"/>
+      <field name="economicArea" canEdit="false"/>
+      <field name="citizenship"/>
+    </panel>
+    <panel name="attributesPanel" title="Attributes">
+      <field name="cog"/>
+      <field name="phonePrefix"/>
+    </panel>
+    <panel  name="standardsPanel" title="Standards">
+      <field name="isIspmRequired"/>
+    </panel>
+  </form>
+
+
+  <!--////////////////////// Partner Grid  //////////////////-->
+  <grid name="partner-grid-contacts-kay" title="Contact" model="com.axelor.apps.base.db.Partner" groupBy="user" >
+    <field name="cnic"/>
+    <field name="simpleFullName"/>
+    <field name="fatherName"/>
+    <field name="sexSelect" title="Gender"/>
+    <field name="maritalStatus"/>
+    <field name="birthDate"/>
+    <field name="religion"/>
+    <field name="mobilePhone" widget="phone"/>
+    <field name="emailAddress.address" title="Email"/>
+    <field name="user" hidden="true" form-view="user-form" grid-view="user-grid"/>
+  </grid>
+
+
+  <!--////////////////////// Partner Form  //////////////////-->
+  <form name="partner-form-contacts-kay" title="Contact" model="com.axelor.apps.base.db.Partner">
+    <panel>
+      <field name="cnic"/>
+      <field name="firstName"/>
+      <field name="name" title="Last Name"/>
+      <field name="fatherName"/>
+      <field name="sexSelect" title="Gender"/>
+      <field name="maritalStatus"/>
+      <field name="birthDate"/>
+      <field name="religion"/>
+      <field name="mobilePhone" widget="phone"/>
+      <field name="emailAddress" title="Email"/>
+    </panel>
+  </form>
+
+
+</object-views>

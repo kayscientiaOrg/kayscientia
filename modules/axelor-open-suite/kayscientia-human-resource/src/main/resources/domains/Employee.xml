@@ -18,6 +18,7 @@
      ]]>
      </string>
     <string name="status" title="Status" selection="edge.hr.employee.status" />
+    <many-to-one name="emailAddress" ref="com.axelor.message.db.EmailAddress"/>
 
 <track on="UPDATE">
 

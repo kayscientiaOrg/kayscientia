@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="hr" package="com.edge.apps.hr.db"/>
+
+  <entity name="Institute">
+
+    <one-to-one name="address" ref="com.axelor.apps.base.db.Address" title="Address"/>
+    <string name="code" title="Code"/>
+    <string name="instituteName" title="Institute Name"/>
+    <string name="fullName" title="Full Name" namecolumn="true" search="instituteType,sector">
+      <![CDATA[
+	       		if(!instituteName.contains(address.getCity().getName()))
+	       		{
+	       		return instituteName+ ", " +address.getCity().getName();
+	       		}
+	       		return instituteName ;
+	       ]]>
+    </string>
+    <one-to-one name="instituteType" ref="com.edge.apps.hr.db.InstituteType"
+      title="Institution Type"/>
+    <boolean name="isVisible" title="Visible"/>
+    <string name="link" title="Website Link"/>
+    <string name="phone" title="Contact Number"/>
+    <string name="sector" title="Sector" selection="institution.hr.sector.select"/>
+
+    <string name="fullAddress" title="Full Address">
+      <![CDATA[
+	       		    if (address.getCity() == null) return address.getAddressL4()+ ", "+ address.getAddressL7Country().getName();
+	       		    return address.getAddressL4()+ ", " + address.getCity().getName() +", "+ address.getAddressL7Country().getName();
+	       ]]>
+    </string>
+
+  </entity>
+
+</domain-models>

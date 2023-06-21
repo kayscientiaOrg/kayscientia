@@ -6,17 +6,15 @@
   <module name="base" package="com.axelor.apps.base.db"/>
 
   <entity name="Partner">
-   <string name="cnic" title="CNIC"/>
+      <string name="cnic" title="CNIC"/>
+      <string name="fatherName" title="Father Name"/>
+      <date name="birthDate" title="Birth Date"/>
       <string name="sexSelect" title="Sex" selection="employee.hr.sex.select"/>
       <string name="maritalStatus" title="Marital status" selection="hr.employee.marital.status"/>
-   <string name="maritalName" title="Marital Name"/>
-
-   <string name="email" title="Email"/>
-
-      <boolean name="isCriminal" title="Criminal Record"
-               help="Have you been prosecuted in a Criminal Court ? ( If Yes give details ) "/>
+      <string name="maritalName" title="Marital Name"/>
+      <string name="email" title="Email"/>
+      <boolean name="isCriminal" title="Criminal Record" help="Have you been prosecuted in a Criminal Court ? ( If Yes give details ) "/>
       <string name="criminalDetails" title="Details"/>
-
       <boolean name="isDisable" title="Disability"/>
       <string name="disabilityType" title="Disability Type" selection="employee.hr.disability.type.select"/>
       <string name="disabilityDetails" title="Details about Disability"/>
@@ -24,15 +22,12 @@
       <string name="eobiReg" title="EOBI Regi. #"/>
       <string name="driverLicense" title="Driver License"/>
       <string name="bloodGroup" title="Blood Group" selection="employee.hr.blood.group.select"/>
-
       <string name="identificationMark" title="Identification Mark"/>
 
 
       <string name="age" title="Age" formula="true">
           <![CDATA[
-
      ( AGE(birth_date) )
-
      ]]>
       </string>
 

@@ -1,6 +1,3 @@
 sudo docker start timescaledb
 ./gradlew clean
-sed -i "/random/c\select ${RANDOM} as random;" src/main/resources/db/migration/R__reset-modules.sql
-./gradlew database --migrate
- sed -i "/random/c\select 'RANDOM_NUMBER' as random;" src/main/resources/db/migration/R__reset-modules.sql
 ./gradlew run --port 8085

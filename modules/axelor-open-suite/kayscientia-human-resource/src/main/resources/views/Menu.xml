@@ -5,14 +5,67 @@
 
   <menuitem  name="hr-root-kay" title="HR" icon="fa-sitemap"/>
 
-  <menuitem  name="hr-employee-management" title="Employees" icon="fa-address-card-o" parent="hr-root-kay" action="employee.all-hr"/>
 
-  <action-view name="employee.all-hr" model="com.axelor.apps.hr.db.Employee" title="Employee">
+<!--//////////  Add Employee Menu //////////////////////////////////-->
+  <menuitem  name="hr-employee-management" title="Employees" icon="fa-address-card-o" parent="hr-root-kay" action="employee.all.hr"/>
+
+  <action-view name="employee.all.hr" model="com.axelor.apps.hr.db.Employee" title="Employee">
     <view name="employee-card-kay" type="cards"/>
     <view name="employee-grid-kay" type="grid"/>
     <view name="employee-form-kay" type="form"/>
     <view-param name="search-filters" value="employee-filters"/>
   </action-view>
+
+
+  <!--//////////  Company Offices Menu //////////////////////////////////-->
+  <menuitem  name="hr-company-offices-menu" title="Company Offices"  parent="hr-root-kay" action="hr.company.offices"/>
+
+  <action-view name="hr.company.offices" model="com.edge.apps.hr.db.Office" title="Company Offices">
+    <view name="office-grid-kay" type="grid"/>
+    <view name="office-form-kay" type="form"/>
+  </action-view>
+
+
+  <!--//////////  Institute Setting Menu //////////////////////////////////-->
+  <menuitem  name="hr-institute-root-menu" title="Institute Setting"  parent="hr-root-kay" />
+
+  <menuitem  name="hr-institute-menu" title="Institute"  parent="hr-institute-root-menu" action="action-add-Institute"/>
+
+  <action-view name="action-add-Institute" model="com.edge.apps.hr.db.Institute" title="Institute / Organization">
+    <view name="institute-grid-employee" type="grid"/>
+    <view name="institute-form-employee" type="form"/>
+    <view-param name="limit" value="100"/>
+  </action-view>
+
+  <!--//////////  Institute Type Menu //////////////////////////////////-->
+  <menuitem  name="hr-institute-type-menu" title="Institute Type"  parent="hr-institute-root-menu" action="action-Institute-type"/>
+
+  <action-view name="action-Institute-type" model="com.edge.apps.hr.db.InstituteType" title="Institute Type">
+    <view name="institute-type-grid-employee" type="grid"/>
+    <view name="institute-type-form-employee" type="form"/>
+    <view-param name="limit" value="100"/>
+  </action-view>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--  ////////  Action to validate Birth date   ////////////////-->
+  <action-condition name="action-validate-birth-date-for-employee">
+    <check if=" birthDate > __date__" field="birthDate" error="Future date is not Valid"/>
+  </action-condition>
 
 
 </object-views>

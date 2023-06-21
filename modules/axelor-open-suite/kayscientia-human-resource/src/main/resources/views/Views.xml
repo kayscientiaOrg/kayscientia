@@ -4,6 +4,100 @@
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
 
 
+  <!--/////////////////////////////////////////////////////////////////-->
+<!--/////////   Employee Form Kay   /////////////////////-->
+  <form name="employee-form-kay" title="Employee" model="com.axelor.apps.hr.db.Employee" width="large" onLoad="action-employee-method-set-social-network-url,action-attrs-employee-step-by-step-select-selection-in" onNew="action-employee-record-default,action-attrs-employee-step-by-step-select-selection-in">
+    <toolbar>
+      <button name="createUserBtn" title="Create new user" showIf="user==null" onClick="save,action-employee-view-open-user-creation-wizard"/>
+    </toolbar>
+    <panel name="stepByStepControlsPanel" showIf="stepByStepSelect &lt; 5">
+      <button name="finishBtn" title="Finish"  colSpan="2" onClick="validate,action-employee-record-finish-sbs,save"/>
+    </panel>
+    <panel name="contactSBSPanel" colSpan="12">
+      <field name="contactPartner" showTitle="false" colSpan="12" canSelect="false" canView="false" canRemove="false" domain="self.employee = null AND (self.partnerTypeSelect = 2 OR self.isContact = true)" form-view="partner-contact-form" grid-view="partner-contact-grid">
+        <editor x-viewer="true">
+          <field name="picture" showTitle="false" colSpan="2" css="center" widget="Image"/>
+          <panel name="contactDetailsPanel" colSpan="10">
+            <field name="cnic" title="CNIC" colSpan="3" onChange="action-find-emp-cnic"  pattern="^(\d{13})?$"/>
+            <field name="titleSelect" colSpan="1"/>
+            <field name="firstName" colSpan="2" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
+            <field name="name" title="Last Name" colSpan="3" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
+            <field name="fatherName" title="Father Name" colSpan="3"/>
+            <field name="sexSelect" title="Gender" colSpan="3" onChange="action-check-employee-on-gender, action-group-sex-select-hr" selection-in="['male', 'female']"/>
+            <field name="maritalStatus" colSpan="3" onChange="action-check-employee-on-gender, action-group-marital-status-hr" selection-in="['1','2']"/>
+            <field name="mobilePhone" title="Personal Contact" colSpan="3" widget="phone" x-initial-country="PK"/>
+            <field name="fixedPhone" colSpan="3" widget="phone" x-initial-country="PK" x-placeholder-number-type="FIXED_LINE"/>
+            <field name="emailAddress" title="Email (Click + to add)" canSelect="false" colSpan="3"  canNew="true" form-view="email-address-simple-form"/>
+            <field name="bloodGroup" colSpan="3"/>
+            <field name="birthDate" colSpan="3" onChange="action-validate-birth-date-for-employee"/>
+            <field name="age" title="Age" colSpan="3"/>
+          </panel>
+          <field name="isEobi" title="EOBI Reg. # ?" colSpan="2" widget="boolean-radio" x-true-text="Yes" x-false-text="No"/>
+          <field name="eobiReg" title="Enter EOBI Reg. Number" showIf="isEobi == true" colSpan="3" requiredIf="isEobi == true"/>
+          <field name="isCriminal" title="Any Criminal Record ?" colSpan="2" widget="boolean-radio" x-true-text="Yes" x-false-text="No"/>
+          <field name="criminalDetails" title="Details about Criminal Record" showIf="isCriminal == true" colSpan="5" requiredIf="isCriminal == true"/>
+          <field name="isDisable" title="Any disability ? " colSpan="2" widget="boolean-radio" x-true-text="Yes" x-false-text="No"/>
+          <field name="disabilityType" showIf="isDisable == true" colSpan="3" requiredIf="isDisable == true"/>
+          <field name="disabilityDetails" showIf="isDisable == true" colSpan="7" requiredIf="disabilityType == '8'"/>
+        </editor>
+      </field>
+    </panel>
+
+    <panel name="contractualInfoSBSPanel" title="Contractual information">
+      <field name="mainEmploymentContract" showTitle="false" colSpan="12" canSelect="false" canView="false" domain="self.employee.id = :id">
+        <editor x-viewer="true">
+          <field name="payCompany" colSpan="3"/>
+          <field name="executiveStatusSelect" colSpan="3"/>
+          <field name="employment" colSpan="3"/>
+          <field name="companyDepartment" colSpan="3" canNew="true" form-view="company-department-form" grid-view="company-department-grid"/>
+        </editor>
+      </field>
+      <field name="hireDate" colSpan="3" onChange="action-employee-attrs-set-seniority-date"/>
+      <field name="weeklyWorkHours" colSpan="3"/>
+      <field name="dailyWorkHours" colSpan="3"/>
+      <field name="hourlyRate" colSpan="3"/>
+      <field name="office" colSpan="3" canNew="true" form-view="office-form-kay" grid-view="office-grid"/>
+      <field name="$dailySalaryCost" title="Daily cost" readonly="true" colSpan="3" x-bind="{{hourlyRate * dailyWorkHours}}"/>
+    </panel>
+
+    <panel name="emergencyContactSBSPanel" title="Contact in case of emergency" >
+      <field name="emergencyContact" colSpan="4"/>
+      <field name="emergencyNumber" colSpan="4" widget="phone" x-initial-country="PK"/>
+      <field name="emergencyContactRelationship" title="Relationship" colSpan="4"/>
+    </panel>
+
+    <panel name="userPanel" title="User" hidden="true">
+      <field name="user" title="Attach to" readonlyIf="user!=null"/>
+    </panel>
+
+    <panel-tabs name="mainPanelTab" >
+      <panel-dashlet if="__config__.app.isApp('employee') &amp;&amp; __config__.app.getApp('employee')?.getEmployeeBonus()" name="employeeBonusDashletPanel" title="Bonuses" readonly="true" colSpan="12" action="employee.dashlet.employee.bonus"/>
+      <panel-include if-module="axelor-talent" view="talent-employee-form"/>
+      <panel if="__user__.activeCompany?.hrConfig?.enableDPAE" name="dpaePanel" title="DPAE">
+        <button name="generateNewDPAE" title="Generate new DPAE" colSpan="3" onClick="save,action-employee-method-generate-new-dpae"/>
+        <panel-related colSpan="12" field="dpaeList" form-view="dpae-form" grid-view="dpae-grid" canNew="false"/>
+      </panel>
+      <panel name="employeeFileListPanel" title="Files" colSpan="12">
+        <field name="employeeFileList" showTitle="false" colSpan="12">
+          <editor colSpan="12" x-viewer="true" x-show-on-new="true" x-layout="table">
+            <field name="fileType" colSpan="3" canNew="true" onChange="action-record-set-expiration-date"/>
+            <field name="metaFile" colSpan="3" widget="binary-link" onChange="action-record-set-record-date"/>
+            <field name="recordDate" readonly="true" colSpan="3"/>
+            <field name="expirationDate" showIf="fileType.hasExpirationDate" colSpan="3"/>
+            <field name="fileType.hasExpirationDate" hidden="true"/>
+          </editor>
+        </field>
+      </panel>
+    </panel-tabs>
+
+    <panel-mail name="mailPanel">
+      <mail-messages limit="4"/>
+      <mail-followers/>
+    </panel-mail>
+  </form>
+
+
+  <!--/////////   Employee Card Kay   /////////////////////-->
   <cards name="employee-card-kay" title="Employee" css="rect-image" model="com.axelor.apps.hr.db.Employee" orderBy="name">
     <toolbar>
       <button name="printEmployeePhoneBookBtn" title="Employee PhoneBook" icon="fa-print" onClick="action-print-employee-phonebook"/>
@@ -83,14 +177,16 @@
   </cards>
 
 
+  <!--/////////   Employee Grid Kay   /////////////////////-->
   <grid name="employee-grid-kay" title="Employee" model="com.axelor.apps.hr.db.Employee" orderBy="contactPartner.simpleFullName" edit-icon="true">
     <toolbar>
       <button name="printEmployeePhoneBookBtn" title="Employee PhoneBook" icon="fa-print" onClick="action-print-employee-phonebook"/>
     </toolbar>
-    <field name="contactPartner.partnerSeq" width="120"/>
     <field name="contactPartner.simpleFullName"/>
     <field name="contactPartner.fixedPhone" widget="phone" x-placeholder-number-type="FIXED_LINE"/>
     <field name="contactPartner.mobilePhone" widget="phone"/>
+    <field name="contactPartner.sexSelect" />
+    <field name="contactPartner.maritalStatus" />
     <field name="managerUser" form-view="user-form" grid-view="user-grid"/>
     <field name="mainEmploymentContract.companyDepartment" form-view="company-department-form" grid-view="company-department-grid"/>
     <field name="mainEmploymentContract.payCompany"/>
@@ -98,6 +194,157 @@
   </grid>
 
 
+
+
+<!--/////////////////////////////////////////////////////////////////-->
+<!--  //////////////     Office Form View   ////////////////-->
+  <form name="office-form-kay" title="Office" model="com.edge.apps.hr.db.Office">
+    <panel title="Office" colSpan="12">
+      <field name="name"/>
+      <field name="code" x-bind="{{code|unaccent|uppercase}}"/>
+      <field name="officeType"/>
+      <field name="company"/>
+      <panel name="officeAddress" title="Office Address" colSpan="12" canCollapse="true">
+        <field name="address" showTitle="false" colSpan="12" canSelect="false" canRemove="false" domain="self.office.id = :id">
+          <editor x-viewer="true">
+            <field name="addressL4" title="Address" colSpan="3"/>
+            <field name="city" colSpan="3" onSelect="action-employee-permanent-city-on-select"/>
+            <field name="region" colSpan="3" onSelect="action-employee-permanent-region-on-select"/>
+            <field name="addressL7Country" colSpan="3" onChange="action-employee-country-permanent-address" domain="self.isVisible = true" requiredIf="region != null || city != null || addressL4 != null "/>
+          </editor>
+        </field>
+      </panel>
+    </panel>
+  </form>
+
+
+  <!--  //////////////     Office Grid View   ////////////////-->
+  <grid name="office-grid-kay" title="Office" model="com.edge.apps.hr.db.Office">
+      <field name="name"/>
+      <field name="code"/>
+      <field name="description"/>
+      <field name="officeType"/>
+      <field name="address" canNew="true"/>
+      <field name="company"/>
+  </grid>
+
+
+  <!--/////////////////////////////////////////////////////////////////-->
+  <!--  //////////////     Institute Form View   ////////////////-->
+  <form name="institute-form-employee" title="Institute" model="com.edge.apps.hr.db.Institute" onNew="action-set-default-country-institute">
+    <panel colSpan="12">
+      <field name="instituteName"/>
+      <field name="instituteType" title="Type"/>
+      <field name="sector" title="Sector"/>
+      <panel name="instituePresentAddress" title="Institue Location" colSpan="12">
+        <field name="address" showTitle="false" colSpan="12" domain="self.employee.id = :id">
+          <editor x-viewer="true">
+            <field name="addressL7Country" colSpan="3" onChange="action-employee-country-permanent-address" domain="self.isVisible = true" required="true" requiredIf="region != null || city != null || addressL4 != null "/>
+            <field name="region" title="Province / Region" colSpan="3" onSelect="action-employee-permanent-region-on-select"/>
+            <field name="city" colSpan="3" onSelect="action-employee-permanent-city-on-select"/>
+            <field name="addressL4" title="Address" colSpan="3"/>
+          </editor>
+        </field>
+      </panel>
+      <field name="link" placeholder="http://www.url.com" widget="url" pattern="^(?:http(?:s)?://)?\S+(?:\.\S+)+$"/>
+      <field name="phone" widget="phone" x-initial-country="PK"/>
+    </panel>
+  </form>
+
+
+  <!--  //////////////     Institute Grid View   ////////////////-->
+  <grid name="institute-grid-employee" title="Institute" model="com.edge.apps.hr.db.Institute" orderBy="instituteName" edit-icon="true">
+    <field name="fullName"/>
+    <field name="sector" title="Sector"/>
+    <field name="link" placeholder="http://www.url.com" widget="url" pattern="^(?:http(?:s)?://)?\S+(?:\.\S+)+$"/>
+    <field name="fullAddress" title="Address"/>
+  </grid>
+
+
+
+  <!--/////////////////////////////////////////////////////////////////-->
+  <!--  //////////////     Institute Type Grid View   ////////////////-->
+  <grid name="institute-type-grid-employee" title="Institute Type" model="com.edge.apps.hr.db.InstituteType" edit-icon="true">
+    <field name="name"/>
+    <field name="code"/>
+    <field name="description" title="City"/>
+  </grid>
+
+  <!--  //////////////     Institute Type Form View   ////////////////-->
+  <form name="institute-type-form-employee" title="Institute Type" model="com.edge.apps.hr.db.InstituteType">
+    <panel>
+      <field name="name"/>
+      <field name="code"/>
+      <field name="description"/>
+    </panel>
+  </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <form name="employee-form-kay-small" title="Employee" model="com.axelor.apps.hr.db.Employee" width="large"
+        onLoad="action-employee-method-set-social-network-url,action-attrs-employee-step-by-step-select-selection-in"
+        onNew="action-employee-record-default,action-attrs-employee-step-by-step-select-selection-in" canDelete="false">
+    <panel name="contactSBSPanel" colSpan="12">
+      <panel colSpan="2">
+        <field name="contactPartner" showTitle="false" colSpan="12" canSelect="false" canView="false" canRemove="false" domain="self.employee = null AND (self.partnerTypeSelect = 2 OR self.isContact = true)" form-view="partner-contact-form" grid-view="partner-contact-grid">
+          <editor x-viewer="true">
+            <field name="picture" showTitle="false" colSpan="12" css="center" widget="Image"/>
+          </editor>
+        </field>
+      </panel>
+      <panel colSpan="10">
+        <field name="contactPartner" showTitle="false" colSpan="12" canSelect="false" canView="false" canRemove="false" domain="self.employee = null AND (self.partnerTypeSelect = 2 OR self.isContact = true)" form-view="partner-contact-form" grid-view="partner-contact-grid">
+          <editor x-viewer="true">
+            <field name="cnic" title="CNIC" colSpan="4" onChange="action-find-emp-cnic" required="true" pattern="^(\d{13})?$"/>
+            <field name="titleSelect" colSpan="1"/>
+            <field name="firstName" colSpan="3" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
+            <field name="name" title="Last Name" colSpan="3" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
+            <field name="fatherName" title="Father Name" colSpan="4"/>
+            <field name="birthDate" colSpan="3" onChange="action-validate-birth-date-for-employee"/>
+            <field name="age" title="Age" readonly="true" colSpan="3"/>
+          </editor>
+        </field>
+        <field name="employeeCode" readonly="true" colSpan="4"/>
+      </panel>
+    </panel>
+    <panel name="employeeInformationPanel" title="Employee information" colSpan="12">
+      <field name="mainEmploymentContract" showTitle="false" colSpan="12" canSelect="false" canView="false" canRemove="false" domain="self.employee.id = :id">
+        <editor x-viewer="true">
+          <field name="payCompany" readonly="true" colSpan="3" canView="false"/>
+          <field name="executiveStatusSelect" title="Cadre" colSpan="3" selection-in="['3','4','5','6']"/>
+          <field name="employmentType" colSpan="3"/>
+          <field name="employmentNature" colSpan="3"/>
+        </editor>
+      </field>
+      <field name="departments" colSpan="3"/>
+      <field name="designation" colSpan="3"/>
+      <field name="hireDate" colSpan="3"/>
+      <field name="mobilePhone" title="Offical Number" colSpan="3" widget="phone" x-initial-country="PK"/>
+    </panel>
+
+    <panel-mail name="mailPanel">
+      <mail-messages limit="4"/>
+      <mail-followers/>
+    </panel-mail>
+  </form>
 
 
 </object-views>

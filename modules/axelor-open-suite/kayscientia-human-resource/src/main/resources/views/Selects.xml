@@ -61,6 +61,17 @@
     <option value="4">Deceased</option>
   </selection>
 
+  <selection name="employee.hr.office.type.select">
+    <option value="headOffice">Head Office</option>
+    <option value="regionalOffice">Regional Office</option>
+    <option value="siteOffice">Site Office</option>
+  </selection>
+
+  <selection name="institution.hr.sector.select">
+    <option value="public">Public</option>
+    <option value="private">Private</option>
+  </selection>
+
 
 
 </object-views>

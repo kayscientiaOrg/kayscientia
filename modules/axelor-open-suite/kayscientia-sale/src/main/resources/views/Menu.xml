@@ -3,8 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
 
+
+<!--  //////////  SALES ROOT MENU   ///////////////////////////-->
   <menuitem  name="sales-root-kay" title="Sales" icon="fa-line-chart"/>
 
+  <!--  //////////  SALES CUSTOMERS MENU   ///////////////////////////-->
   <menuitem  name="sale-customers-menu" title="Customers" icon="fa-address-card-o" parent="sales-root-kay" action="sc.root.sale.customers-kay"/>
 
   <action-view name="sc.root.sale.customers-kay" model="com.axelor.apps.base.db.Partner" title="Customers">
@@ -18,6 +21,87 @@
     <context name="_domain" expr="self.isContact = false AND (self.isCustomer = true OR self.isProspect = true)"/>
     <context name="json-enhance" expr="eval:true"/>
   </action-view>
+
+
+
+
+  <!--  //////////  SALES Products & Services MENU   ///////////////////////////-->
+  <menuitem  name="sale-products-services-menu-kay" title="Products &amp; services "  parent="sales-root-kay" action="sc.root.sale.products-kay"/>
+
+  <action-view name="sc.root.sale.products-kay" model="com.axelor.apps.base.db.Product" title="Products &amp; services">
+    <view name="product-cards-kay" type="cards"/>
+    <view name="product-grid-kay" type="grid"/>
+    <view name="product-form-kay" type="form"/>
+    <view-param name="search-filters" value="products-filters"/>
+    <domain>self.isModel = false AND self.sellable = true AND self.isShippingCostsProduct = false
+      AND self.dtype = 'Product'</domain>
+    <context name="_activeCompany" expr="eval:__user__.activeCompany"/>
+    <context name="_fromSale" expr="eval:true"/>
+  </action-view>
+
+
+
+
+
+  <!--  //////////  SALES Quotation MENU   ///////////////////////////-->
+  <menuitem  name="sale-quotation-menu-kay" title="Sale quotations"  parent="sales-root-kay" action="sc.root.sale.quotations-kay"/>
+
+  <action-view name="sc.root.sale.quotations-kay" model="com.axelor.apps.sale.db.SaleOrder" title="Sale quotations">
+    <view name="sale-order-quotation-cards-kay" type="cards"/>
+    <view name="sale-order-quotation-grid-kay" type="grid"/>
+    <view name="sale-order-calendar-kay" type="calendar"/>
+    <view name="sale-order-form-kay" type="form"/>
+    <view-param name="search-filters" value="sale-order-filters"/>
+    <view-param name="forceTitle" value="true"/>
+    <domain>self.template = false and self.statusSelect &lt; 3</domain>
+    <context name="_internalUser" expr="eval: __user__.id"/>
+    <context name="_myActiveTeam" expr="call:com.axelor.apps.base.service.user.UserService:getUserActiveTeam()"/>
+    <context name="_template" expr="eval:false"/>
+    <context name="todayDate" expr="eval: __config__.date"/>
+  </action-view>
+
+
+
+
+  <!--  //////////  SALES Order MENU   ///////////////////////////-->
+  <menuitem  name="sale-order-menu-kay" title="Sale Order"  parent="sales-root-kay" action="sc.root.sale.orders-kay"/>
+
+  <action-view name="sc.root.sale.orders-kay" model="com.axelor.apps.sale.db.SaleOrder" title="Sale orders">
+    <view name="sale-order-cards-kay" type="cards"/>
+    <view name="sale-order-grid-kay" type="grid"/>
+    <view name="sale-order-calendar-kay" type="calendar"/>
+    <view name="sale-order-form-kay" type="form"/>
+    <view-param name="search-filters" value="sale-order-filters"/>
+    <domain>self.template = false and self.statusSelect = 3</domain>
+    <context name="_internalUser" expr="eval: __user__.id"/>
+    <context name="_myActiveTeam" expr="call:com.axelor.apps.base.service.user.UserService:getUserActiveTeam()"/>
+    <context name="_template" expr="eval:false"/>
+    <context name="status" expr="3"/>
+    <context name="todayDate" expr="eval: __config__.date"/>
+  </action-view>
+
+
+
+
+  <!--  //////////  Mass Cust. Stock Move Invoicing MENU   ///////////////////////////-->
+  <menuitem  name="stock-multi-sale-invoicing-menu-kay" title="Mass Cust. Stock Move Invoicing"  parent="sales-root-kay" action="stock.root.multi.sale.invoicing-kay"/>
+
+  <action-view name="stock.root.multi.sale.invoicing-kay" model="com.axelor.apps.stock.db.StockMove" title="Mass Cust. Stock Move Invoicing">
+    <view name="stock-move-multi-sale-invoicing-form" type="form"/>
+  </action-view>
+
+
+
+  <!--  //////////  ABC analysis MENU   ///////////////////////////-->
+  <menuitem  name="sc-root-abc-analysis-menu-kay" title="ABC analysis"  parent="sales-root-kay" action="sale.root.abc.analysis-kay"/>
+
+  <action-view name="sale.root.abc.analysis-kay" model="com.axelor.apps.base.db.ABCAnalysis" title="ABC analysis">
+    <view name="abc-analysis-grid-kay" type="grid"/>
+    <view name="abc-analysis-form-kay" type="form"/>
+    <domain>self.typeSelect = :_type</domain>
+    <context name="_type" expr="com.axelor.apps.sale.service.ABCAnalysisServiceSaleImpl"/>
+  </action-view>
+
 
 
 

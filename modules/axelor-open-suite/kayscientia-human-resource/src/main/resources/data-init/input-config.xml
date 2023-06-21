@@ -22,43 +22,29 @@
       column="object"/>
   </input>
 
-  <input file="meta_helpFR.csv" separator=";" type="com.axelor.meta.db.MetaHelp">
-    <bind to="language" eval="'fr'"/>
-    <bind to="type" eval="'tooltip'"/>
-    <bind to="model"
-      eval="com.axelor.inject.Beans.get(com.axelor.meta.db.repo.MetaModelRepository.class).findByName(object)?.getFullName()"
-      column="object"/>
-  </input>
 
   <input file="meta_metaMenu.csv" separator=";" type="com.axelor.meta.db.MetaMenu"
     search="self.name = :name" update="true"/>
 
 
-   <input file="company.csv" type="com.axelor.apps.base.db.Company"
-   search="self.code = :companyCode" separator=";" update="true">
-   <bind column="companyCode" to="code"/>
-   <bind column="companyName" to="name"/>
-   <bind to="partner" search="self.name = :partnerName">
-   <bind column="partnerName" to="name"/>
-   <bind column="partnerFullName" to="fullName"/>
-   <bind column="partnerType" to="partnerTypeSelect"/>
-   <bind column="isCustomer" to="isCustomer"/>
-   <bind column="isSupplier" to="isSupplier"/>
-   </bind>
-
-       <bind to="address" search="self.addressL4 = :addressL4">
-           <bind column="addressL4" to="addressL4"/>
-           <bind column="zip" to="zip"/>
-           <bind column="addressL7Country" to="addressL7Country" search="self.alpha2Code = :country"/>
-       </bind>
-
-   <bind to="printingSettings" search="self.name = :printingSettingName">
-   <bind column="printingSettingName" to="name"/>
-   </bind>
-   </input>
+    <input file="company.csv" type="com.axelor.apps.base.db.Company"
+           search="self.code = :companyCode" separator=";">
+        <bind column="companyCode" to="code"/>
+        <bind column="companyName" to="name"/>
+        <bind to="partner">
+            <bind column="partnerName" to="name"/>
+            <bind column="partnerFullName" to="fullName"/>
+            <bind column="partnerType" to="partnerTypeSelect"/>
+            <bind column="isCustomer" to="isCustomer"/>
+            <bind column="isSupplier" to="isSupplier"/>
+        </bind>
+        <bind to="printingSettings" search="self.name = :printingSettingName">
+            <bind column="printingSettingName" to="name"/>
+        </bind>
+    </input>
 
 
-  <input file="Employees.csv" type="com.axelor.apps.hr.db.Employee">
+    <input file="Employees.csv" type="com.axelor.apps.hr.db.Employee">
     <bind to="contactPartner" >
       <bind column="firstName" to="firstName"/>
       <bind column="name" to="name"/>

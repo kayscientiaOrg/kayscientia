@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+
+<!--  //////////  BASE ROOT MENU   ///////////////////////////-->
+  <menuitem  name="base-root-kay" title="Base Info" />
+
+  <!--  //////////  BASE CITY MENU     ///////////////////////////-->
+  <menuitem  name="base-cities-menu" title="Cities"  parent="base-root-kay" action="action-add-cites-base"/>
+
+  <action-view name="action-add-cites-base" model="com.axelor.apps.base.db.City" title="Cities">
+    <view name="kay-city-grid" type="grid"/>
+    <view name="kay-city-form" type="form"/>
+    <view-param name="limit" value="200"/>
+  </action-view>
+
+
+  <!--  //////////  BASE PROVINCE MENU    ///////////////////////////-->
+  <menuitem  name="base-province-menu" title="Provinces"  parent="base-root-kay" action="action-add-regions-base"/>
+
+  <action-view name="action-add-regions-base" model="com.axelor.apps.base.db.Region" title="Provinces">
+    <view name="kay-region-grid" type="grid"/>
+    <view name="kay-region-form" type="form"/>
+    <view-param name="limit" value="200"/>
+  </action-view>
+
+
+  <!--  //////////  BASE COUNTRY MENU    ///////////////////////////-->
+  <menuitem  name="base-country-menu" title="Countries"  parent="base-root-kay" action="action-add-countries-base"/>
+
+  <action-view name="action-add-countries-base" model="com.axelor.apps.base.db.Country" title="Countries">
+    <view name="kay-country-grid" type="grid"/>
+    <view name="kay-country-form" type="form"/>
+    <view-param name="search-filters" value="country-filters"/>
+    <view-param name="limit" value="200"/>
+  </action-view>
+
+
+  <!--  //////////  BASE PARTNER MENU    ///////////////////////////-->
+  <menuitem  name="base-partner-menu" title="All Contacts"  parent="base-root-kay" action="action-partner-kay"/>
+
+  <action-view name="action-partner-kay" model="com.axelor.apps.base.db.Partner" title="All Contacts">
+    <view name="partner-grid-contacts-kay" type="grid"/>
+    <view name="partner-form-contacts-kay" type="form"/>
+    <view-param name="limit" value="200"/>
+  </action-view>
+
+
+
+
+
+</object-views>
