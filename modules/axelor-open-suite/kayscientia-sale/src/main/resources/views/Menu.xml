@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+  <menuitem  name="sales-root-kay" title="Sales" icon="fa-line-chart"/>
+
+  <menuitem  name="sale-customers-menu" title="Customers" icon="fa-address-card-o" parent="sales-root-kay" action="sc.root.sale.customers-kay"/>
+
+  <action-view name="sc.root.sale.customers-kay" model="com.axelor.apps.base.db.Partner" title="Customers">
+    <view name="partner-cards-kay" type="cards"/>
+    <view name="partner-grid-kay" type="grid"/>
+    <view name="partner-form-kay" type="form"/>
+    <view-param name="limit" value="39"/>
+    <view-param name="search-filters" value="partner-filters"/>
+    <domain>self.isContact = false AND (self.isCustomer = true OR self.isProspect = true)</domain>
+    <context name="_isCustomer" expr="true"/>
+    <context name="_domain" expr="self.isContact = false AND (self.isCustomer = true OR self.isProspect = true)"/>
+    <context name="json-enhance" expr="eval:true"/>
+  </action-view>
+
+
+
+</object-views>

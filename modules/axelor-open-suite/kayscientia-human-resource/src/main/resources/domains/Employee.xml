@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="human-resource" package="com.axelor.apps.hr.db"/>
+
+  <entity name="Employee">
+
+    <string name="employeeCode" title="Employee Code" unique="true"/>
+    <string name="serialNumber" unique="true"/>
+    <many-to-one name="barCode" title="Barcode" ref="com.axelor.meta.db.MetaFile"/>
+    <boolean name="isTravel" title="Willing to Travel" help="Are you willing to travel if necessary or serve anywhere in Pakistan ? "/>
+    <many-to-one name="office" title="Office Location" ref="com.edge.apps.hr.db.Office"/>
+     <string name="jobDuration" title="Job Duration" formula="true">
+     <![CDATA[
+     ( AGE(employee0_.hire_date) )
+     ]]>
+     </string>
+    <string name="status" title="Status" selection="edge.hr.employee.status" />
+
+<track on="UPDATE">
+
+  <field name="status" />
+  <field name="isDepartmentHead"/>
+  <field name="office"/>
+  <field name="barCode"/>
+  <field name="serialNumber"/>
+  <field name="employeeCode"/>
+
+</track>
+  </entity>
+
+</domain-models>

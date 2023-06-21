@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+  <menuitem  name="hr-root-kay" title="HR" icon="fa-sitemap"/>
+
+  <menuitem  name="hr-employee-management" title="Employees" icon="fa-address-card-o" parent="hr-root-kay" action="employee.all-hr"/>
+
+  <action-view name="employee.all-hr" model="com.axelor.apps.hr.db.Employee" title="Employee">
+    <view name="employee-card-kay" type="cards"/>
+    <view name="employee-grid-kay" type="grid"/>
+    <view name="employee-form-kay" type="form"/>
+    <view-param name="search-filters" value="employee-filters"/>
+  </action-view>
+
+
+</object-views>

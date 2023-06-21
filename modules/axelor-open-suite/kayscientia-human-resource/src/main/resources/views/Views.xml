@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.1.xsd">
+
+
+  <cards name="employee-card-kay" title="Employee" css="rect-image" model="com.axelor.apps.hr.db.Employee" orderBy="name">
+    <toolbar>
+      <button name="printEmployeePhoneBookBtn" title="Employee PhoneBook" icon="fa-print" onClick="action-print-employee-phonebook"/>
+    </toolbar>
+    <field name="contactPartner.picture"/>
+    <field name="contactPartner.firstName"/>
+    <field name="contactPartner.name"/>
+    <field name="contactPartner.fixedPhone"/>
+    <field name="contactPartner.mobilePhone"/>
+    <field name="mainEmploymentContract.payCompany"/>
+    <field name="mainEmploymentContract.companyDepartment"/>
+    <field name="hireDate"/>
+    <field name="leavingDate"/>
+    <field name="hrManager"/>
+    <template><![CDATA[
+<div style="margin: -16px; height: 180px;display: flex;">
+  		<div class="span4 card-image" style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
+        <img ng-src="{{$image('contactPartner.picture', 'content')}}" style="width: 128px; height: 64px; object-fit: contain;" />
+        <strong>{{contactPartner.firstName}} {{contactPartner.name}}</strong>
+  		</div>
+  		<div class="span8" style="padding-left: 40px;display: flex;flex-direction: column;justify-content: center;position: relative;">
+      		<div style="position: absolute;height: calc(100% + 16px);display: flex;align-items: center;left: 0;transform: skew(-20deg, 0deg);border-left: 2px solid #ddd;">
+          		<div ng-style="hrManager && {'background-color': '#d9534f', 'color': '#fff'} || record.leavingDate == null && $moment(record.hireDate) > $moment().subtract(30, 'days') && {'background-color': '#20BCB5', 'color': '#fff'} || record.leavingDate != null && $moment(record.leavingDate) < $moment()  && {'background-color': '#BC2026', 'color': '#fff'}"
+              	style="width: 30px;height: 60%;background: #ddd; color: #000; display: flex;flex-direction: column;justify-content: center;align-items: center;box-shadow: rgb(0 0 0 / 25%) 3px 3px 8px">
+              		<span ng-if="contactPartner.fixedPhone">
+                  		<i class="fa fa-phone fa-flip-horizontal" style="font-size: 18px;transform: skew(20deg, 0deg);" />
+              		</span>
+              		<span ng-if="contactPartner.mobilePhone">
+                  		<i class="fa fa-mobile" style="font-size: 18px;transform: skew(20deg, 0deg);" />
+              		</span>
+                <span ng-if="mainEmploymentContract.payCompany.name">
+                    <i class="fa fa-home" style="font-size: 18px;transform: skew(20deg, 0deg);" />
+                </span>
+                <span ng-if="mainEmploymentContract.companyDepartment.name">
+                    <i class="fa fa-home" style="font-size: 18px;transform: skew(20deg, 0deg);" />
+                </span>
+          		</div>
+      		</div>
+      		<span>
+            <span style="margin-left: 2rem" ng-if="contactPartner.fixedPhone">
+                {{ contactPartner.fixedPhone}}
+                <br/>
+            </span>
+            <span style="margin-left: 1.5rem"  ng-if="contactPartner.mobilePhone">
+                {{contactPartner.mobilePhone}}
+                <br/>
+            </span>
+            <span style="margin-left: 1rem" ng-if="mainEmploymentContract.payCompany.name">
+                <strong>
+                    <span x-translate>Company</span>
+                </strong>
+                : {{mainEmploymentContract.payCompany.name}}
+                <br/>
+            </span>
+            <span style="margin-left: 0.5rem" ng-if="mainEmploymentContract.companyDepartment.name">
+              		<strong>
+                    <span x-translate>Department</span>
+                </strong>
+                : {{mainEmploymentContract.companyDepartment.name}}<br/>
+            </span>
+        </span>
+  		</div>
+  		<div style="display: flex;justify-content: flex-end;position: absolute;bottom: 3px;right: 6px;">
+        <span class="label label-important" ng-show="hrManager" style="margin: 5px 0 5px 0; display: inline-table; line-height: initial;" line-height: initial;" x-translate>
+            HR manager
+        </span>
+        <span class="label label-default" style="background-color: #20BCB5; margin: 5px 0 5px 5px !important; display: inline-table; line-height: initial;" ng-show="record.leavingDate == null && $moment(record.hireDate) > $moment().subtract(30, 'days')" x-translate>
+            New employee
+        </span>
+        <span class="label label-default" style="background-color: #BC2026; margin: 5px 0 5px 5px !important; display: inline-table; line-height: initial;" ng-show="record.leavingDate != null && $moment(record.leavingDate) < $moment()" x-translate>
+            Former employee
+        </span>
+  		</div>
+</div>
+
+  ]]></template>
+  </cards>
+
+
+  <grid name="employee-grid-kay" title="Employee" model="com.axelor.apps.hr.db.Employee" orderBy="contactPartner.simpleFullName" edit-icon="true">
+    <toolbar>
+      <button name="printEmployeePhoneBookBtn" title="Employee PhoneBook" icon="fa-print" onClick="action-print-employee-phonebook"/>
+    </toolbar>
+    <field name="contactPartner.partnerSeq" width="120"/>
+    <field name="contactPartner.simpleFullName"/>
+    <field name="contactPartner.fixedPhone" widget="phone" x-placeholder-number-type="FIXED_LINE"/>
+    <field name="contactPartner.mobilePhone" widget="phone"/>
+    <field name="managerUser" form-view="user-form" grid-view="user-grid"/>
+    <field name="mainEmploymentContract.companyDepartment" form-view="company-department-form" grid-view="company-department-grid"/>
+    <field name="mainEmploymentContract.payCompany"/>
+    <field name="archived" hidden="true"/>
+  </grid>
+
+
+
+
+</object-views>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+
+  <selection name="employee.hr.sex.select" id="hr-sex-select">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </selection>
+
+  <selection name="hr.employee.marital.status" id="edgeHR">
+    <option value="4">Widowed</option>
+  </selection>
+
+  <selection name="employee.hr.disability.type.select">
+    <option value="1">Vision Impairment</option>
+    <option value="2">Deaf or Hard of Hearing</option>
+    <option value="3">Mental Health Conditions</option>
+    <option value="4">Intellectual Disability</option>
+    <option value="5">Acquired Brain Injury</option>
+    <option value="6">Autism Spectrum Disorder</option>
+    <option value="7">Physical Disability</option>
+    <option value="8">Other</option>
+  </selection>
+
+
+  <selection name="employee.hr.blood.group.select">
+    <option value="A+">A positive</option>
+    <option value="A-">A negative</option>
+    <option value="B+">B positive</option>
+    <option value="B-">B negative</option>
+    <option value="O+">O positive</option>
+    <option value="O-">O negative</option>
+    <option value="AB+">AB positive</option>
+    <option value="AB-">AB negative</option>
+  </selection>
+
+
+  <selection name="select-reason-of-leaving-job">
+    <option value="1">Got a Better Deal From Another Company</option>
+    <option value="2">Looking for a Different Work Arrangement</option>
+    <option value="3">The Job Didn’t Align With Career Goals</option>
+    <option value="4">Passed Over a Promotion</option>
+    <option value="5">Couldn’t Get Along With New Boss or Supervisor</option>
+    <option value="6">Had Personal Issues to Deal With</option>
+    <option value="7">Overqualified for the Job</option>
+    <option value="8">Company Dynamics Changed</option>
+    <option value="9">Company Seized Operations</option>
+    <option value="10">The Job Didn’t Match Expectations</option>
+    <option value="11">Laid Off</option>
+    <option value="12">Fired</option>
+    <option value="13">Other</option>
+  </selection>
+
+
+  <selection name="edge.hr.employee.status">
+    <option value="1">Active</option>
+    <option value="2">Former Employee</option>
+    <option value="3">Fired</option>
+    <option value="4">Deceased</option>
+  </selection>
+
+
+
+</object-views>
