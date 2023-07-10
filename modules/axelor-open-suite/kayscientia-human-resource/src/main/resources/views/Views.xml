@@ -11,14 +11,14 @@
       <button name="createUserBtn" title="Create new user" showIf="user==null" onClick="save,action-employee-view-open-user-creation-wizard"/>
     </toolbar>
     <panel name="stepByStepControlsPanel" showIf="stepByStepSelect &lt; 5">
-      <button name="finishBtn" title="Finish"  colSpan="2" onClick="validate,action-employee-record-finish-sbs,save"/>
+      <button name="finishBtn" title="Finish" colSpan="2" onClick="validate,action-employee-record-finish-sbs,save"/>
     </panel>
     <panel name="contactSBSPanel" colSpan="12">
       <field name="contactPartner" showTitle="false" colSpan="12" canSelect="false" canView="false" canRemove="false" domain="self.employee = null AND (self.partnerTypeSelect = 2 OR self.isContact = true)" form-view="partner-contact-form" grid-view="partner-contact-grid">
         <editor x-viewer="true">
           <field name="picture" showTitle="false" colSpan="2" css="center" widget="Image"/>
           <panel name="contactDetailsPanel" colSpan="10">
-            <field name="cnic" title="CNIC" colSpan="3" onChange="action-find-emp-cnic"  pattern="^(\d{13})?$"/>
+            <field name="cnic" title="CNIC" colSpan="3" onChange="action-find-emp-cnic" pattern="^(\d{13})?$"/>
             <field name="titleSelect" colSpan="1"/>
             <field name="firstName" colSpan="2" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
             <field name="name" title="Last Name" colSpan="3" onChange="action-partner-record-simple-and-full-name,action-employee-contact-method-set-social-network-url"/>
@@ -27,7 +27,7 @@
             <field name="maritalStatus" colSpan="3" onChange="action-check-employee-on-gender, action-group-marital-status-hr" selection-in="['1','2']"/>
             <field name="mobilePhone" title="Personal Contact" colSpan="3" widget="phone" x-initial-country="PK"/>
             <field name="fixedPhone" colSpan="3" widget="phone" x-initial-country="PK" x-placeholder-number-type="FIXED_LINE"/>
-            <field name="emailAddress" title="Email (Click + to add)" canSelect="false" colSpan="3"  canNew="true" form-view="email-address-simple-form"/>
+            <field name="emailAddress" title="Email (Click + to add)" colSpan="3" canSelect="false" canNew="true" form-view="email-address-simple-form"/>
             <field name="bloodGroup" colSpan="3"/>
             <field name="birthDate" colSpan="3" onChange="action-validate-birth-date-for-employee"/>
             <field name="age" title="Age" colSpan="3"/>
@@ -42,7 +42,6 @@
         </editor>
       </field>
     </panel>
-
     <panel name="contractualInfoSBSPanel" title="Contractual information">
       <field name="mainEmploymentContract" showTitle="false" colSpan="12" canSelect="false" canView="false" domain="self.employee.id = :id">
         <editor x-viewer="true">
@@ -59,18 +58,97 @@
       <field name="office" colSpan="3" canNew="true" form-view="office-form-kay" grid-view="office-grid"/>
       <field name="$dailySalaryCost" title="Daily cost" readonly="true" colSpan="3" x-bind="{{hourlyRate * dailyWorkHours}}"/>
     </panel>
-
-    <panel name="emergencyContactSBSPanel" title="Contact in case of emergency" >
+    <panel name="emergencyContactSBSPanel" title="Contact in case of emergency">
       <field name="emergencyContact" colSpan="4"/>
       <field name="emergencyNumber" colSpan="4" widget="phone" x-initial-country="PK"/>
       <field name="emergencyContactRelationship" title="Relationship" colSpan="4"/>
     </panel>
-
     <panel name="userPanel" title="User" hidden="true">
       <field name="user" title="Attach to" readonlyIf="user!=null"/>
     </panel>
 
+
+
+
+
     <panel-tabs name="mainPanelTab" >
+
+      <panel name="employmentContractsPanel" title="Employment contracts">
+        <panel name="contractualInfoPanel" title="Contractual information" colSpan="12">
+          <field name="hireDate" colSpan="4" onChange="action-employee-attrs-set-seniority-date"/>
+          <field name="seniorityDate" colSpan="4"/>
+          <field name="leavingDate" colSpan="4"/>
+          <field name="bonusCoef" colSpan="6"/>
+          <field name="profitSharingBeneficiary" colSpan="6"/>
+          <field name="weeklyWorkHours" colSpan="3"/>
+          <field name="dailyWorkHours" colSpan="3"/>
+          <field name="hourlyRate" colSpan="3"/>
+          <field name="$dailySalaryCost" title="Daily cost" readonly="true" colSpan="3" x-bind="{{hourlyRate * dailyWorkHours}}"/>
+          <panel name="mainEmploymentContractPanel" title="Main employment contract" colSpan="12">
+            <field name="mainEmploymentContract" showTitle="false" colSpan="12" domain="self.employee.id = :id">
+              <editor x-viewer="true">
+                <field name="payCompany" colSpan="3"/>
+                <field name="executiveStatusSelect" colSpan="3"/>
+                <field name="employment" colSpan="3"/>
+                <field name="companyDepartment" colSpan="3" form-view="company-department-form" grid-view="company-department-grid"/>
+              </editor>
+            </field>
+          </panel>
+        </panel>
+        <field name="employmentContractList" colSpan="12" form-view="employment-contract-form" grid-view="employment-contract-employee-grid"/>
+      </panel>
+
+
+      <panel name="leaveListPanel" title="Leave List">
+        <field name="leaveLineList" colSpan="12" form-view="leave-line-form" grid-view="leave-line-grid"/>
+        <field name="negativeValueLeave" widget="InlineCheckbox"/>
+      </panel>
+
+
+
+      <panel  name="timesheetsPanel" title="Timesheets">
+        <field name="timeLoggingPreferenceSelect" colSpan="3"/>
+        <field name="product" colSpan="3" canEdit="false" domain="self.isActivity = true AND self.dtype = 'Product'" form-view="product-form" grid-view="product-grid"/>
+        <field name="timesheetReminder" colSpan="3"/>
+        <field if="__config__.app.getApp('production')?.getEnableTimesheetOnManufOrder()" if-module="axelor-business-production" name="timesheetImputationSelect" colSpan="3"/>
+        <panel-dashlet name="employeeUserTimesheetsPanel" colSpan="12" action="action-employee-view-user-timesheets"/>
+      </panel>
+
+
+
+      <panel if="__config__.app.isApp('employee') &amp;&amp; __config__.app.getApp('employee')?.getLunchVoucher()" name="lunchVoucherPanel" title="Lunch vouchers">
+        <field name="lunchVoucherFormatSelect" colSpan="3"/>
+        <panel-dashlet name="lunchVouchersDashletPanel" title="Lunch vouchers" colSpan="12" action="action-employee-view-show-lunch-voucher"/>
+        <panel-related name="lunchVoucherAdvanceListPanel" colSpan="12" field="lunchVoucherAdvanceList" form-view="lunch-voucher-advance-form" grid-view="lunch-voucher-advance-grid" canNew="false" canEdit="false" canRemove="true"/>
+        <button name="addLunchVoucherAdvanceBtn" title="Add an advance" colSpan="3" icon="fa-ticket" onClick="save,action-lunch-voucher-advance-new"/>
+      </panel>
+
+      <panel name="expensesPanel" title="Expenses">
+        <field name="companyCbSelect" colSpan="3" onChange="action-hr-record-reset-company-cb-details"/>
+        <field name="companyCbDetails" hidden="true" showIf="companyCbSelect > 1" colSpan="3"/>
+        <panel-related if="__config__.app.isApp('employee') &amp;&amp; __config__.app.getApp('employee')?.getAdvanceManagement()" name="employeeAdvanceListPanel" title="Employee advances" readonly="false" colSpan="12" field="employeeAdvanceList" form-view="employee-advance-employee-form" grid-view="employee-advance-employee-grid"/>
+      </panel>
+
+
+
+      <panel  name="vehiclePanel" title="Vehicle">
+        <panel-related if="__config__.app.isApp('timesheet')" name="kilometricLogListPanel" title="Kilometric log" readonly="true" colSpan="12" field="kilometricLogList" form-view="kilometric-log-form" grid-view="kilometric-log-grid"/>
+        <panel name="vehicleListPanel" title="Vehicles" colSpan="12">
+          <field name="employeeVehicleList" showTitle="false" colSpan="12">
+            <editor colSpan="12" x-viewer="true" x-show-on-new="true" x-layout="table">
+              <field name="vehicleRegistrationCertificate" colSpan="2" widget="Image"/>
+              <panel colSpan="10" itemSpan="4">
+                <field name="vehicleMake"/>
+                <field name="vehicleModel"/>
+                <field name="plateNo"/>
+                <field name="kilometricAllowParam" widget="SuggestBox" canEdit="false"/>
+                <field name="startDate" onChange="action-employee-validate-dates"/>
+                <field name="endDate" onChange="action-employee-validate-dates"/>
+              </panel>
+            </editor>
+          </field>
+        </panel>
+      </panel>
       <panel-dashlet if="__config__.app.isApp('employee') &amp;&amp; __config__.app.getApp('employee')?.getEmployeeBonus()" name="employeeBonusDashletPanel" title="Bonuses" readonly="true" colSpan="12" action="employee.dashlet.employee.bonus"/>
       <panel-include if-module="axelor-talent" view="talent-employee-form"/>
       <panel if="__user__.activeCompany?.hrConfig?.enableDPAE" name="dpaePanel" title="DPAE">
@@ -80,7 +158,7 @@
       <panel name="employeeFileListPanel" title="Files" colSpan="12">
         <field name="employeeFileList" showTitle="false" colSpan="12">
           <editor colSpan="12" x-viewer="true" x-show-on-new="true" x-layout="table">
-            <field name="fileType" colSpan="3" canNew="true" onChange="action-record-set-expiration-date"/>
+            <field name="fileType" colSpan="3" onChange="action-record-set-expiration-date"/>
             <field name="metaFile" colSpan="3" widget="binary-link" onChange="action-record-set-record-date"/>
             <field name="recordDate" readonly="true" colSpan="3"/>
             <field name="expirationDate" showIf="fileType.hasExpirationDate" colSpan="3"/>
@@ -89,6 +167,7 @@
         </field>
       </panel>
     </panel-tabs>
+
 
     <panel-mail name="mailPanel">
       <mail-messages limit="4"/>
@@ -346,5 +425,198 @@
     </panel-mail>
   </form>
 
+
+
+
+<!--  /////////////////  Expense Form  /////////////////////-->
+
+  <form name="expense-form-kay" title="Expense" model="com.axelor.apps.hr.db.Expense" width="large" onLoad="action-expense-attrs-hide-button-readonly-field,action-expense-attrs-expense-company-cb,action-expense-attrs-multiple-users,action-expense-attrs-set-total-to-refund" onSave="action-expense-method-validate-and-compute" onNew="action-expense-record-default,action-expense-attrs-hide-button-readonly-field,action-expense-attrs-multiple-users,action-expense-attrs-set-total-to-refund" canDelete="ventilated == false">
+    <menubar>
+      <menu name="expenseReportsMenu" title="Reports" icon="fa-files-o">
+        <item name="printExpenseItem" title="Print" action="save,action-print-expense"/>
+      </menu>
+    </menubar>
+    <panel name="mainPanel">
+      <panel name="statusPanel" colSpan="9">
+        <field name="statusSelect" showTitle="false" colSpan="12" widget="NavSelect"/>
+        <field name="expenseSeq" showTitle="false" colSpan="8">
+          <viewer depends="expenseSeq"><![CDATA[
+
+				<h3>
+					<span x-translate>Expense</span>
+					{{record.expenseSeq}}
+				</h3>
+
+        ]]></viewer>
+        </field>
+        <field name="move" showTitle="false" readonly="true" showIf="move" colSpan="4">
+          <viewer><![CDATA[
+
+					<h3>
+						<span class="label label-important" x-translate>Ventilated</span>
+					</h3>
+
+        ]]></viewer>
+        </field>
+        <panel name="generalInfoPanel" colSpan="12">
+          <field name="multipleUsers" hidden="true" colSpan="12" onChange="action-expense-attrs-multiple-users"/>
+          <field name="company" canEdit="false" onChange="action-expense-record-company-onchange" required="true" form-view="company-form" grid-view="company-grid"/>
+          <field name="employee" canNew="false" canView="false" canEdit="false" onChange="action-expense-record-employee-onchange" onSelect="action-hr-attrs-set-employee-domain" required="true" form-view="employee-form" grid-view="employee-grid"/>
+          <field if="__config__.app.getApp('base')?.getManageMultiBanks()" if-module="axelor-cash-management" name="bankDetails" widget="SuggestBox" onSelect="action-accounting-batch-attrs-bank-details-domain" form-view="bank-details-form" grid-view="bank-details-grid"/>
+          <field name="period" canView="false" canEdit="false" onSelect="action-expense-attrs-domain-period" form-view="period-form" grid-view="period-grid"/>
+          <field name="companyCbSelect" readonlyIf="statusSelect != 1" onChange="action-expense-attrs-expense-company-cb"/>
+          <field name="withdrawnCash" hidden="true" showIf="companyCbSelect > 1" readonlyIf="statusSelect != 1"/>
+          <field name="employee.companyCbDetails" hidden="true" showIf="employee != null &amp;&amp; companyCbSelect > 1" colSpan="12"/>
+          <field name="personalExpenseAmount" hidden="true"/>
+          <field name="advanceAmount" hidden="true"/>
+        </panel>
+      </panel>
+      <panel name="sidePanel" colSpan="3" itemSpan="12">
+        <panel name="actionsPanel" itemSpan="12">
+          <button name="sendExpensesBtn" title="Send Expenses" hidden="true" hideIf="statusSelect > 1" onClick="action-expense-group-send"/>
+          <button name="ventilateBtn" title="Ventilate" hidden="true" onClick="save,action-expense-method-ventilate"/>
+          <button name="validateBtn" title="Validate" hidden="true" onClick="action-expense-group-validate"/>
+          <button name="refuseBtn" title="Refuse" hidden="true" onClick="action-expense-group-refuse"/>
+          <button name="cancelBtn" title="Cancel" hidden="true" css="btn-danger" icon="fa-times-circle" onClick="action-expense-validate-period,save,com.axelor.apps.hr.web.expense.ExpenseController:cancel,action-expense-attrs-hide-button-readonly-field"/>
+          <button name="draftBtn" title="Return to draft status" showIf="statusSelect > 4 " onClick="action-expense-record-draft,save,action-expense-attrs-hide-button-readonly-field"/>
+          <button name="addPaymentBtn" title="Register payment" showIf="move &amp;&amp; statusSelect == 3  &amp;&amp; (paymentStatusSelect == 0 || paymentStatusSelect == 2)" onClick="save,action-expense-add-payment-form"/>
+          <button name="cancelPaymentBtn" title="Cancel payment" showIf="(paymentStatusSelect == 1 || paymentStatusSelect == 3)" onClick="save,action-expense-method-cancel-payment"/>
+        </panel>
+        <panel name="inTaxTotalPanel" readonly="true">
+          <field name="inTaxTotal" showTitle="false" colSpan="12" css="order-subtotal">
+            <viewer depends="exTaxTotal,taxTotal,personalExpenseAmount,withdrawnCash,advanceAmount,statusSelect,paymentAmount,paymentStatusSelect,$totalToRefund"><![CDATA[
+
+                    <dl class="dl-horizontal">
+                        <dt x-translate>Total W.T.</dt>
+                        <dd>{{$fmt('exTaxTotal')}}</dd>
+                        <dt x-translate>Total tax</dt>
+                        <dd>{{$fmt('taxTotal')}}</dd>
+                        <dt class="order-subtotal-total" x-translate>Total A.T.I.</dt>
+                        <dd class="order-subtotal-total">{{$fmt('inTaxTotal')}}</dd>
+                        <dt ng-show="record.personalExpenseAmount != 0" x-translate>Personal expense</dt>
+                        <dd ng-show="record.personalExpenseAmount != 0"> -{{$fmt('personalExpenseAmount')}}</dd>
+                        <dt ng-show="record.withdrawnCash != 0" x-translate>Withdrawn cash</dt>
+                        <dd ng-show="record.withdrawnCash != 0">-{{$fmt('withdrawnCash')}}</dd>
+                        <dt ng-show="record.advanceAmount != 0" x-translate>Advance</dt>
+                        <dd ng-show="record.advanceAmount != 0">-{{$fmt('advanceAmount')}}</dd>
+                        <dt ng-show="(record.statusSelect == 3 || record.statusSelect == 4 &amp;&amp; record.paymentAmount != 0) &amp;&amp; (record.paymentStatusSelect == 1 || record.paymentStatusSelect == 3)"  ng-style="{'color' : 'blue'}" x-translate>Payment</dt>
+                        <dd ng-show="(record.statusSelect == 3 || record.statusSelect == 4 &amp;&amp; record.paymentAmount != 0) &amp;&amp; (record.paymentStatusSelect == 1 || record.paymentStatusSelect == 3)"  ng-style="{'color' : 'blue'}">-{{$fmt('paymentAmount')}}</dd>
+                        <dt class="order-subtotal-total" x-translate>TotalToRefund</dt>
+                        <dd class="order-subtotal-total">{{$fmt('$totalToRefund')}}</dd>
+                    </dl>
+
+          ]]></viewer>
+          </field>
+          <field name="$totalToRefund" title="Total to refund" hidden="true" type="decimal"/>
+        </panel>
+      </panel>
+    </panel>
+    <panel name="followupPanel" title="Follow-up" showIf="sentDateTime" colSpan="12" canCollapse="true">
+      <field name="sentDateTime" colSpan="4"/>
+      <field name="validatedBy" hidden="true" showIf="validatedBy" colSpan="4" canEdit="false" form-view="user-form" grid-view="user-grid"/>
+      <field name="validationDateTime" hidden="true" showIf="validationDateTime" colSpan="4"/>
+      <field name="refusedBy" hidden="true" showIf="refusedBy" colSpan="4" canEdit="false" form-view="user-form" grid-view="user-grid"/>
+      <field name="refusalDateTime" hidden="true" showIf="refusalDateTime" colSpan="4"/>
+      <field name="groundForRefusal" hidden="true" readonly="true" showIf="statusSelect == 5 || groundForRefusal != null" colSpan="12"/>
+    </panel>
+
+    <panel-tabs name="mainPanelTab">
+
+      <panel-related name="generalExpenseLineListPanel" title="General expenses" readonlyIf="statusSelect > 1" colSpan="12" field="generalExpenseLineList"
+                     form-view="expense-line-form-kay" grid-view="expense-line-grid-kay"
+                     editable="true" onChange="action-expense-group-expense-line-on-change"/>
+      <panel-related name="kilometricExpenseLineListPanel" title="Kilometric Allowances" showIf="!setMultipleUsers" readonlyIf="statusSelect > 1" colSpan="12" field="kilometricExpenseLineList" form-view="expense-line-kilometric-form" grid-view="expense-line-kilometric-grid" editable="true" onChange="action-expense-group-expense-line-on-change"/>
+      <panel-related name="employeeAdvanceUsageListPanel" title="Employee advance list" readonly="false" showIf="!setMultipleUsers &amp;&amp; employeeAdvanceUsageList &amp;&amp; employeeAdvanceUsageList.length > 0" field="employeeAdvanceUsageList" form-view="employee-advance-usage-expense-form" grid-view="employee-advance-usage-expense-grid" editable="true" canSelect="false" canNew="false" canEdit="true"/>
+      <panel name="accountInfoPanel" title="Account information">
+        <panel name="moveInfoPanel" title="Account information">
+          <field name="moveDate" readonlyIf="move" colSpan="4"/>
+          <field name="move" showIf="move" readonlyIf="move" colSpan="6" form-view="move-form" grid-view="move-grid"/>
+        </panel>
+        <panel name="paymentInfoPanel" title="Payment information" showIf=" statusSelect == 4" colSpan="12">
+          <field name="paymentStatusSelect" colSpan="4"/>
+          <field name="paymentMode" readonly="true" showIf="paymentMode" colSpan="4"/>
+          <field name="paymentDate" readonly="true" showIf="paymentDate" colSpan="4"/>
+          <field name="bankOrder" hidden="true" showIf="bankOrder" colSpan="4"/>
+        </panel>
+      </panel>
+    </panel-tabs>
+
+
+    <panel name="attrsPanel">
+      <field name="attrs" colSpan="12"/>
+    </panel>
+    <panel-mail name="mailPanel">
+      <mail-messages limit="4"/>
+      <mail-followers/>
+    </panel-mail>
+  </form>
+
+
+<!--  //////////////// Expense Grid  /////////////////////////////-->
+  <grid name="expense-grid-kay" title="Expenses" model="com.axelor.apps.hr.db.Expense" orderBy="-sentDateTime" edit-icon="true">
+    <hilite color="danger" if="statusSelect == 5"/>
+    <hilite color="success" if="statusSelect == 3 || statusSelect == 4"/>
+    <hilite color="warning" if="statusSelect == 2"/>
+    <field name="expenseSeq" width="120"/>
+    <field if="__config__.app.getApp('base')?.getEnableMultiCompany()" name="company" form-view="company-form" grid-view="company-grid"/>
+    <field name="sentDateTime"/>
+    <field name="period" canView="false" canEdit="false" form-view="period-form" grid-view="period-grid"/>
+    <field name="employee" form-view="employee-form" grid-view="employee-grid"/>
+    <field name="statusSelect"/>
+    <field name="ventilated"/>
+  </grid>
+
+<!--/////////////// Expense Line Form ///////////////////////-->
+  <form name="expense-line-form-kay" title="Expense line" model="com.axelor.apps.hr.db.ExpenseLine" width="large" onSave="action-expense-line-validate-expenseDate" onNew="action-expense-line-default">
+    <panel name="mainPanel" title="Main">
+      <field name="employee" hidden="true" showIf="expense.multipleUsers" canNew="false" canView="false" canEdit="false" onSelect="action-expense-line-attrs-company" form-view="employee-form" grid-view="employee-grid"/>
+      <field name="project" widget="SuggestBox" canEdit="false" onSelect="action-expense-line-attrs-domain-project" requiredIf="toInvoice" form-view="project-form" grid-view="project-grid" edit-icon="false"/>
+      <field name="expenseProduct" widget="SuggestBox" canEdit="false" onSelect="action-expense-line-attrs-set-product-domain" form-view="product-expense-form" grid-view="product-expense-grid" edit-icon="false"/>
+      <field name="expenseDate" onChange="action-expense-line-validate-expenseDate"/>
+      <field name="totalAmount" onChange="action-expense-on-change-untaxt-amount, action-expense-line-method-compute-analytic-distribution" validIf="$number(totalAmount) >= $number(totalTax)"/>
+      <field name="totalTax" readonlyIf="expenseProduct.blockExpenseTax == true" onChange="action-expense-on-change-tax-untaxt-amount, action-expense-line-method-compute-analytic-distribution" validIf="$number(totalAmount) >= $number(totalTax)"/>
+      <field name="untaxedAmount"/>
+      <field name="toInvoice" colSpan="3"/>
+      <field name="invoiced" showTitle="false" showIf="toInvoice &amp;&amp; id &amp;&amp; $readonly()" colSpan="3">
+        <viewer><![CDATA[
+
+                      <h4>
+                          <span class="label label-success" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="record.invoiced" x-translate>Invoiced</span>
+                          <span class="label label-important" style="margin: 5px 0 !important; display: inline-table; line-height: initial;" ng-show="!record.invoiced" x-translate>Not invoiced</span>
+                      </h4>
+
+      ]]></viewer>
+      </field>
+      <field name="justificationMetaFile" widget="binary-link"/>
+      <field name="comments" colSpan="12"/>
+      <field name="expense" hidden="true"/>
+      <field name="expense.companyCbSelect" hidden="true"/>
+      <field name="expense.multipleUsers" hidden="true"/>
+    </panel>
+    <panel if="__config__.app.isApp('account') &amp;&amp; __config__.app.getApp('account')?.getManageAnalyticAccounting()" name="analyticDistributionPanel" title="Analytic distribution" onTabSelect="action-expense-line-attrs-read-only-distribution-lines">
+      <field name="analyticDistributionTemplate" canEdit="false" onChange="action-expense-line-method-create-distribution" form-view="analytic-distribution-template-form" grid-view="analytic-distribution-template-grid"/>
+      <panel-related name="analyticMoveLineListPanel" colSpan="12" field="analyticMoveLineList" form-view="analytic-move-line-distribution-form" grid-view="analytic-move-line-distribution-grid" onChange="action-analytic-move-line-group-analytic-move-line-list-onchange"/>
+      <field name="$isValidAnalyticMoveLineList" hidden="true" type="boolean"/>
+    </panel>
+    <panel name="attrsPanel">
+      <field name="attrs" colSpan="12"/>
+    </panel>
+  </form>
+
+
+  <!--///////////////////   Expense Line Grid   ////////////////////////-->
+  <grid name="expense-line-grid-kay" title="Expense lines" model="com.axelor.apps.hr.db.ExpenseLine" orderBy="-expenseDate" onNew="action-expense-line-default, action-kilometric-allowance-record-default" edit-icon="true">
+    <hilite color="danger" if="untaxedAmount == 0"/>
+    <field name="project" width="150" widget="SuggestBox" canView="false" onChange="action-expense-line-attrs-project-on-change" onSelect="action-expense-line-attrs-domain-project" requiredIf="toInvoice"/>
+    <field name="expenseProduct" width="200" widget="SuggestBox" canView="false" onSelect="action-expense-line-attrs-set-product-domain" form-view="product-expense-form" grid-view="product-expense-grid"/>
+    <field name="expenseDate" width="120" onChange="action-expense-line-validate-expenseDate"/>
+    <field name="employee" hidden="true" onSelect="action-expense-line-attrs-company" form-view="employee-form" grid-view="employee-grid"/>
+    <field name="totalAmount" width="170" onChange="action-expense-on-change-tax-untaxt-amount" validIf="$number(totalAmount) >= $number(totalTax)" aggregate="sum"/>
+    <field name="totalTax" readonlyIf="expenseProduct.blockExpenseTax" width="80" onChange="action-expense-on-change-tax-untaxt-amount,action-expense-line-method-compute-analytic-distribution" validIf="$number(totalAmount) >= $number(totalTax)" aggregate="sum"/>
+    <field name="toInvoice"/>
+    <field name="comments" width="400"/>
+    <field name="untaxedAmount" hidden="true"/>
+    <field name="expenseProduct.blockExpenseTax" hidden="true"/>
+  </grid>
 
 </object-views>
